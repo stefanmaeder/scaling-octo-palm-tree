@@ -141,7 +141,7 @@ systemctl --user start --now podman
 # Start OpenCTI containers
 # -------------------------------
 
-podman-compose up
+podman-compose up -d
 # Launch all containers defined in the Podman-Compose setup
 EOF
 
