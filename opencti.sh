@@ -5,38 +5,10 @@
 sudo apt update -y
 # Update the package lists from all repositories automatically
 
-sudo apt install podman-docker podman-compose git jq -y
-# Install Podman (container engine), Podman-Compose (docker-compose-like for Podman),
+sudo apt install docker-compose git jq -y
+# Install Docker (container engine),
 # Git (version control), and jq (JSON processor)
 # The "-y" automatically confirms installation
-
-# -------------------------------
-# Configure Podman registries
-# -------------------------------
-
-sudo tee /etc/containers/registries.conf <<EOF
-[registries.search]
-registries = ["docker.io"]
-EOF
-# Create a Podman configuration file to set "docker.io" as the default registry for images
-
-# -------------------------------
-# Create a system user for Podman services
-# -------------------------------
-
-sudo useradd \
-  --system \
-  --create-home \
-  podman-svc
-# Create a system user "podman-svc" with a home directory
-
-sudo bash -c 'echo "podman-svc:100000:65536" >> /etc/subuid'
-sudo bash -c 'echo "podman-svc:100000:65536" >> /etc/subgid'
-# Configure UID and GID subordinate mappings for rootless containers
-# Important for Podman to run containers without root privileges
-
-sudo loginctl enable-linger podman-svc
-# Allows the user's systemd services to run even when the user is not logged in
 
 # -------------------------------
 # Adjust system parameters
@@ -56,11 +28,6 @@ sudo sysctl --system
 # As podman-svc user: Prepare OpenCTI environment
 # -------------------------------
 
-sudo -u podman-svc -i bash <<'EOF'
-set -e
-# Exit immediately if any command fails
-
-cd /home/podman-svc
 mkdir -p opencti && cd opencti
 # Create working directory for OpenCTI
 
@@ -122,35 +89,11 @@ EOD
 export $(grep -v '^#' .env | xargs)
 # Load all key/value pairs from .env into the shell environment
 
-# -------------------------------
-# Podman systemd socket setup
-# -------------------------------
-
-export XDG_RUNTIME_DIR=/run/user/$(id -u)
-# Set the runtime directory for Podman systemd services
-
-systemctl --user daemon-reexec
-# Reload the systemd user manager
-
-systemctl --user enable --now podman.socket
-systemctl --user start --now podman.socket
-systemctl --user start --now podman
-# Enable and start the Podman socket and service under the user
+sudo systemctl start docker.service
 
 # -------------------------------
 # Start OpenCTI containers
 # -------------------------------
 
-podman-compose up
-# Launch all containers defined in the Podman-Compose setup
-EOF
-
-# -------------------------------
-# Secure podman-svc user after setup
-# -------------------------------
-
-sudo usermod -s /usr/sbin/nologin podman-svc
-# Set the login shell to nologin to prevent direct login
-
-sudo passwd -l podman-svc
-# Lock the user password for additional security
+docker-compose up -d
+# Run docker-compose in detached
