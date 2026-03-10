@@ -26,6 +26,9 @@ echo "vm.max_map_count=1048575" | sudo tee /etc/sysctl.d/99-max_map_count.conf
 sudo sysctl --system
 # Reload all sysctl settings including the new max_map_count
 
+sudo groupadd docker
+sudo usermod -aG docker $USER
+
 mkdir -p opencti && cd opencti
 # Create working directory for OpenCTI
 
@@ -95,7 +98,6 @@ EOD
 export $(grep -v '^#' .env | xargs)
 # Load all key/value pairs from .env into the shell environment
 
-sudo systemctl start docker.service
 
 # -------------------------------
 # Start OpenCTI containers
