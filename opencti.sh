@@ -76,9 +76,6 @@ cd docker
 # -------------------------------
 
 cat > .env <<EOD
-APP__ENCRYPTION_KEY=$(openssl rand -base64 32)
-# Main encryption key for OpenCTI (32 bytes, base64)
-
 CONNECTOR_ANALYSIS_ID=$(cat /proc/sys/kernel/random/uuid)
 CONNECTOR_EXPORT_FILE_CSV_ID=$(cat /proc/sys/kernel/random/uuid)
 CONNECTOR_EXPORT_FILE_STIX_ID=$(cat /proc/sys/kernel/random/uuid)
@@ -101,7 +98,9 @@ OPENCTI_ADMIN_TOKEN=$(cat /proc/sys/kernel/random/uuid)
 # Admin user and token for OpenCTI web interface
 
 OPENCTI_BASE_URL=http://localhost:8080
-OPENCTI_ENCRYPTION_KEY=$(cat /proc/sys/kernel/random/uuid)
+OPENCTI_ENCRYPTION_KEY=$(openssl rand -base64 32)
+# Main encryption key for OpenCTI (32 bytes, base64)
+
 OPENCTI_HEALTHCHECK_ACCESS_KEY=$(cat /proc/sys/kernel/random/uuid)
 OPENCTI_HOST=http://localhost
 OPENCTI_PORT=8080
