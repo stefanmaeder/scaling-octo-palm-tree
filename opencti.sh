@@ -1,5 +1,9 @@
 sudo apt update -y
 sudo apt install podman-docker podman-compose git jq -y
+sudo tee /etc/containers/registries.conf <<EOF
+[registries.search]
+registries = ["docker.io"]
+EOF
 sudo useradd \
   --system \
   --create-home \
