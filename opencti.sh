@@ -103,5 +103,6 @@ export $(grep -v '^#' .env | xargs)
 # Start OpenCTI containers
 # -------------------------------
 
+echo "new version"
 sudo docker-compose up -d
 # Run docker-compose in detached
