@@ -5,7 +5,7 @@
 sudo apt update -y
 # Update the package lists from all repositories automatically
 
-sudo apt install docker-compose git jq -y
+sudo apt install docker-compose docker.io git jq -y
 # Install Docker (container engine),
 # Git (version control), and jq (JSON processor)
 # The "-y" automatically confirms installation
@@ -13,6 +13,8 @@ sudo apt install docker-compose git jq -y
 # -------------------------------
 # Adjust system parameters
 # -------------------------------
+
+sudo systemctl start docker.service
 
 sudo sysctl -w vm.max_map_count=1048575
 # Set the maximum number of memory map areas a process may have
