@@ -1,0 +1,48 @@
+sudo apt update -y
+sudo apt install podman-docker podman-compose git jq -y
+sudo useradd \
+  --system \
+  --create-home \
+  podman-svc
+sudo bash -c 'echo "podman-svc:100000:65536" >> /etc/subuid'
+sudo bash -c 'echo "podman-svc:100000:65536" >> /etc/subgid'
+sudo loginctl enable-linger podman-svc
+sudo sysctl -w vm.max_map_count=1048575
+echo "vm.max_map_count=1048575" | sudo tee /etc/sysctl.d/99-max_map_count.conf
+sudo sysctl --system
+sudo -u podman-svc -i bash -c '
+cd /home/podman-svc
+mkdir opencti && cd opencti
+git clone https://github.com/OpenCTI-Platform/docker.git
+cd docker
+(cat << EOF
+OPENCTI_ADMIN_EMAIL=admin@opencti.io
+OPENCTI_ADMIN_PASSWORD=ChangeMePlease
+OPENCTI_ADMIN_TOKEN=$(cat /proc/sys/kernel/random/uuid)
+OPENCTI_BASE_URL=http://localhost:8080
+OPENCTI_HEALTHCHECK_ACCESS_KEY=$(cat /proc/sys/kernel/random/uuid)
+MINIO_ROOT_USER=$(cat /proc/sys/kernel/random/uuid)
+MINIO_ROOT_PASSWORD=$(cat /proc/sys/kernel/random/uuid)
+RABBITMQ_DEFAULT_USER=guest
+RABBITMQ_DEFAULT_PASS=guest
+ELASTIC_MEMORY_SIZE=4G
+CONNECTOR_HISTORY_ID=$(cat /proc/sys/kernel/random/uuid)
+CONNECTOR_EXPORT_FILE_STIX_ID=$(cat /proc/sys/kernel/random/uuid)
+CONNECTOR_EXPORT_FILE_CSV_ID=$(cat /proc/sys/kernel/random/uuid)
+CONNECTOR_IMPORT_FILE_STIX_ID=$(cat /proc/sys/kernel/random/uuid)
+CONNECTOR_EXPORT_FILE_TXT_ID=$(cat /proc/sys/kernel/random/uuid)
+CONNECTOR_IMPORT_DOCUMENT_ID=$(cat /proc/sys/kernel/random/uuid)
+CONNECTOR_ANALYSIS_ID=$(cat /proc/sys/kernel/random/uuid)
+SMTP_HOSTNAME=localhost
+EOF
+) > .env
+export $(cat .env | grep -v "#" | xargs)
+export XDG_RUNTIME_DIR=/run/user/$(id -u)
+systemctl --user daemon-reexec
+systemctl --user enable --now podman.socket
+systemctl --user start --now podman.socket
+systemctl --user start --now podman
+podman-compose up -d
+'
+sudo usermod -s /usr/sbin/nologin podman-svc
+sudo passwd -l podman-svc
