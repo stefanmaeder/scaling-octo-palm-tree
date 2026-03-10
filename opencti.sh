@@ -55,7 +55,6 @@ CONNECTOR_IMPORT_EXTERNAL_REFERENCE_ID=$(cat /proc/sys/kernel/random/uuid)
 CONNECTOR_IMPORT_FILE_STIX_ID=$(cat /proc/sys/kernel/random/uuid)
 CONNECTOR_IMPORT_FILE_YARA_ID=$(cat /proc/sys/kernel/random/uuid)
 CONNECTOR_MITRE_ID=$(cat /proc/sys/kernel/random/uuid)
-CONNECTOR_OPENCTI_ID=$(cat /proc/sys/kernel/random/uuid)
 # UUIDs for connectors (unique per installation)
 
 ELASTIC_MEMORY_SIZE=4G
