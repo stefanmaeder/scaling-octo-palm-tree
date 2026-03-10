@@ -10,12 +10,17 @@ sudo loginctl enable-linger podman-svc
 sudo sysctl -w vm.max_map_count=1048575
 echo "vm.max_map_count=1048575" | sudo tee /etc/sysctl.d/99-max_map_count.conf
 sudo sysctl --system
-sudo -u podman-svc -i bash -c '
+sudo -u podman-svc -i bash <<'EOF'
+set -e
+
 cd /home/podman-svc
-mkdir opencti && cd opencti
+mkdir -p opencti && cd opencti
+
 git clone https://github.com/OpenCTI-Platform/docker.git
 cd docker
-(cat << EOF
+
+# Create .env file
+cat > .env <<EOD
 OPENCTI_ADMIN_EMAIL=admin@opencti.io
 OPENCTI_ADMIN_PASSWORD=ChangeMePlease
 OPENCTI_ADMIN_TOKEN=$(cat /proc/sys/kernel/random/uuid)
@@ -34,15 +39,22 @@ CONNECTOR_EXPORT_FILE_TXT_ID=$(cat /proc/sys/kernel/random/uuid)
 CONNECTOR_IMPORT_DOCUMENT_ID=$(cat /proc/sys/kernel/random/uuid)
 CONNECTOR_ANALYSIS_ID=$(cat /proc/sys/kernel/random/uuid)
 SMTP_HOSTNAME=localhost
-EOF
-) > .env
-export $(cat .env | grep -v "#" | xargs)
+EOD
+
+# Export variables
+export $(grep -v '^#' .env | xargs)
+
+# Set runtime dir for podman systemd
 export XDG_RUNTIME_DIR=/run/user/$(id -u)
+
+# Systemd user services
 systemctl --user daemon-reexec
 systemctl --user enable --now podman.socket
 systemctl --user start --now podman.socket
 systemctl --user start --now podman
+
+# Start containers
 podman-compose up -d
-'
+EOF
 sudo usermod -s /usr/sbin/nologin podman-svc
 sudo passwd -l podman-svc
