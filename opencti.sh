@@ -26,7 +26,7 @@ cd docker
 
 # Generate .env file
 cat > .env <<EOD
-APP__ENCRYPTION_KEY=$(cat /proc/sys/kernel/random/uuid)
+APP__ENCRYPTION_KEY=$(openssl rand -base64 32)
 OPENCTI_ADMIN_EMAIL=admin@opencti.io
 OPENCTI_ADMIN_PASSWORD=ChangeMePlease
 OPENCTI_ADMIN_TOKEN=$(cat /proc/sys/kernel/random/uuid)
