@@ -16,10 +16,11 @@ set -e
 cd /home/podman-svc
 mkdir -p opencti && cd opencti
 
+# Clone the repo
 git clone https://github.com/OpenCTI-Platform/docker.git
 cd docker
 
-# Create .env file
+# Generate .env file
 cat > .env <<EOD
 OPENCTI_ADMIN_EMAIL=admin@opencti.io
 OPENCTI_ADMIN_PASSWORD=ChangeMePlease
@@ -41,13 +42,11 @@ CONNECTOR_ANALYSIS_ID=$(cat /proc/sys/kernel/random/uuid)
 SMTP_HOSTNAME=localhost
 EOD
 
-# Export variables
+# Export variables from .env
 export $(grep -v '^#' .env | xargs)
 
-# Set runtime dir for podman systemd
+# Podman systemd setup
 export XDG_RUNTIME_DIR=/run/user/$(id -u)
-
-# Systemd user services
 systemctl --user daemon-reexec
 systemctl --user enable --now podman.socket
 systemctl --user start --now podman.socket
