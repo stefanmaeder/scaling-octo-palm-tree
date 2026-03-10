@@ -24,10 +24,6 @@ echo "vm.max_map_count=1048575" | sudo tee /etc/sysctl.d/99-max_map_count.conf
 sudo sysctl --system
 # Reload all sysctl settings including the new max_map_count
 
-# -------------------------------
-# As podman-svc user: Prepare OpenCTI environment
-# -------------------------------
-
 mkdir -p opencti && cd opencti
 # Create working directory for OpenCTI
 
