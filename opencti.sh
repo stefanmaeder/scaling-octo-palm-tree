@@ -103,5 +103,5 @@ export $(grep -v '^#' .env | xargs)
 # Start OpenCTI containers
 # -------------------------------
 
-docker-compose up -d
+sudo docker-compose up -d
 # Run docker-compose in detached
