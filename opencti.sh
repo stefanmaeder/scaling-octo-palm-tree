@@ -103,13 +103,13 @@ OPENCTI_ADMIN_TOKEN=$(cat /proc/sys/kernel/random/uuid)
 OPENCTI_BASE_URL=http://localhost:8080
 OPENCTI_ENCRYPTION_KEY=$(cat /proc/sys/kernel/random/uuid)
 OPENCTI_HEALTHCHECK_ACCESS_KEY=$(cat /proc/sys/kernel/random/uuid)
-OPENCTI_HOST="http://localhost"
-OPENCTI_PORT="8080"
+OPENCTI_HOST=http://localhost
+OPENCTI_PORT=8080
 # OpenCTI service URLs and access keys
 
-RABBITMQ_DEFAULT_PASS=guest
-RABBITMQ_DEFAULT_USER=guest
-# RabbitMQ default credentials
+RABBITMQ_DEFAULT_PASS=$(cat /proc/sys/kernel/random/uuid)
+RABBITMQ_DEFAULT_USER=$(cat /proc/sys/kernel/random/uuid)
+# credentials for RabbitMQ
 
 SMTP_HOSTNAME=localhost
 # SMTP server for email notifications
