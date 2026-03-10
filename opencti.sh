@@ -83,6 +83,7 @@ CONNECTOR_EXPORT_FILE_TXT_ID=$(cat /proc/sys/kernel/random/uuid)
 CONNECTOR_HISTORY_ID=$(cat /proc/sys/kernel/random/uuid)
 CONNECTOR_IMPORT_DOCUMENT_ID=$(cat /proc/sys/kernel/random/uuid)
 CONNECTOR_IMPORT_FILE_STIX_ID=$(cat /proc/sys/kernel/random/uuid)
+ONNECTOR_ID=$(cat /proc/sys/kernel/random/uuid)
 # UUIDs for connectors (unique per installation)
 
 ELASTIC_MEMORY_SIZE=4G
