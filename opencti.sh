@@ -57,7 +57,7 @@ systemctl --user start --now podman.socket
 systemctl --user start --now podman
 
 # Start containers
-podman-compose up -d
+podman-compose up
 EOF
 sudo usermod -s /usr/sbin/nologin podman-svc
 sudo passwd -l podman-svc
