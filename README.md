@@ -1,5 +1,5 @@
-# scaling-octo-palm-tree
+# OpenCTI-Deployment
 
 ```
-curl -fsSL https://raw.githubusercontent.com/stefanmaeder/scaling-octo-palm-tree/refs/heads/main/opencti.sh | bash
+curl -fsSL https://raw.githubusercontent.com/stefanmaeder/OpenCTI-Deployment/refs/heads/main/opencti.sh | bash
 ```
